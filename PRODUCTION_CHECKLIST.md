@@ -1,0 +1,22 @@
+- **Secrets**
+  - Set `APP_SECRET` to a strong random value.
+  - Never store RSA private keys in plaintext in DB in production; use KMS / envelope encryption.
+- **TLS**
+  - Terminate TLS at a reverse proxy (Nginx/Traefik) and set `COOKIE_SECURE=true`.
+- **Database**
+  - Use managed Postgres, enable backups, PITR, and connection pooling (PgBouncer).
+  - Run Alembic migrations in CI/CD before deploying new app versions.
+- **Redis**
+  - Use managed Redis, enable AUTH/TLS where available.
+  - Separate cache/rate-limit Redis from queue Redis if needed.
+- **Background jobs**
+  - Run `worker` as a separate deployment with autoscaling.
+  - Add retries / dead-letter queues for external calls (email/provider/webhooks).
+- **Observability**
+  - Add structured logs, request IDs, and metrics (`/metrics`) if required.
+- **Security**
+  - CORS: explicit allowlist only.
+  - Rate-limit OTP endpoints (already wired with basic fixed-window).
+  - Audit log sensitive events (login, approvals, license issuance, billing actions).
+  - Ensure org scoping on every query (enforced via `require_org_scope`).
+
